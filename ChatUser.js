@@ -62,11 +62,21 @@ class ChatUser {
     });
   }
 
-  handleJoke() {
-    console.log("entered handleJoke");
+  /** handleJoke - Query the icanhazdadjoke API and send joke back to user. */
+  async handleJoke() {
+    const resp = await fetch("https://icanhazdadjoke.com/", {
+      method: "GET",
+      headers: {
+        "User-Agent": "r33",
+        "Accept": "text/plain"
+      }
+    });
+
+    const joke = await resp.text();
+
     this.send(JSON.stringify({
       type: "note",
-      text: "Think of a joke later",
+      text: `Here's your joke: ${joke}`,
     }));
   }
 
@@ -80,12 +90,12 @@ class ChatUser {
    * </code>
    */
 
-  handleMessage(jsonData) {
+  async handleMessage(jsonData) {
     let msg = JSON.parse(jsonData);
 
     if (msg.type === "join") this.handleJoin(msg.name);
     else if (msg.type === "chat") this.handleChat(msg.text);
-    else if (msg.type === "get-joke") this.handleJoke();
+    else if (msg.type === "get-joke") await this.handleJoke();
     else throw new Error(`bad message: ${msg.type}`);
   }
 
