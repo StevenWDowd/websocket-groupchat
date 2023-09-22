@@ -62,7 +62,21 @@ $("form").submit(function (evt) {
   if ($("#m").val() === "/joke") {
     let data = { type: "get-joke" }
     ws.send(JSON.stringify(data));
-  } else {
+  } else if ($("#m").val() === "/members") {
+    let data = { type: "get-members" }
+    ws.send(JSON.stringify(data));
+
+  } else if($("#m").val().startsWith("/priv")) {
+    let dataParts = $("#m").val().split(" ");
+    let messageArr = dataParts.slice(2);
+    let messageText = messageArr.join(" ");
+    let data = {
+      type: "private-message",
+      text: messageText,
+      recipient: dataParts[1]
+    };
+    ws.send(JSON.stringify(data));
+  }else {
   let data = { type: "chat", text: $("#m").val() };
   ws.send(JSON.stringify(data));
   }

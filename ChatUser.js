@@ -80,6 +80,40 @@ class ChatUser {
     }));
   }
 
+  /** listMembers: provide a list of current room members  */
+
+  listMembers() {
+    const currentMembers = this.room.members;
+    //const currMemberNames = currentMembers.forEach(member => member.name);
+    const currentMembersArr = Array.from(currentMembers);
+    const currMemberNames = currentMembersArr.map(member => member.name);
+    const membersMessage = `Currently chatting: ` + currMemberNames.join(', ');
+
+    this.send(JSON.stringify({
+      type: "note",
+      text: membersMessage
+    }));
+  }
+
+  /** send a private message to one other user */
+  sendPrivMessage(text, recipientName) {
+    console.log("entered private message func");
+    let recipient = this.room.findMember(recipientName);
+    if (recipient) {
+    recipient.send(JSON.stringify({
+      type: "note",
+      text: `Private message from ${this.name}: ` + text
+    }))
+    } else {
+      this.send(JSON.stringify({
+        type: "note",
+        text: "No user to send message to."
+      }))
+    }
+
+    ;
+  }
+
   /** Handle messages from client:
    *
    * @param jsonData {string} raw message data
@@ -96,6 +130,10 @@ class ChatUser {
     if (msg.type === "join") this.handleJoin(msg.name);
     else if (msg.type === "chat") this.handleChat(msg.text);
     else if (msg.type === "get-joke") await this.handleJoke();
+    else if (msg.type === "get-members") this.listMembers();
+    else if (msg.type === "private-message") {
+      this.sendPrivMessage(msg.text, msg.recipient);
+    }
     else throw new Error(`bad message: ${msg.type}`);
   }
 
