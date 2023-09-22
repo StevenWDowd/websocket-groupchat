@@ -1,11 +1,11 @@
 {
   "name": "groupchat",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "docs": "jsdoc -d docs ."
+    "docs": "jsdoc -d docs .",
+    "start": "node server.js"
   },
   "author": "",
   "license": "ISC",
@@ -17,5 +17,10 @@
   },
   "devDependencies": {
     "jsdoc": "^3.6.7"
-  }
+  },
+  "directories": {
+    "doc": "docs"
+  },
+  "keywords": [],
+  "description": ""
 }
